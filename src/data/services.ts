@@ -17,7 +17,6 @@ export const services = [
   { id: 16, name: 'Interior Decoration', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869146350_ee3a0c27.webp' },
   { id: 17, name: 'Driving', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869147112_d67341ed.webp' },
   { id: 18, name: 'Installation of Hardwares', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869145590_3b68ec45.webp' },
-  { id: 19, name: 'Electrician', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869145590_3b68ec45.webp', price: '$70-150/hr' },
   { id: 20, name: 'Welding', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869145590_3b68ec45.webp', price: '$60-120/hr' },
   { id: 21, name: 'Masonry', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869145590_3b68ec45.webp', price: '$50-100/hr' },
   { id: 22, name: 'Computer Technician', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869145590_3b68ec45.webp', price: '$50-100/hr' },
