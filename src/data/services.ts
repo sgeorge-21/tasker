@@ -11,7 +11,7 @@ export const services = [
   { id: 10, name: 'Moving', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869147112_d67341ed.webp', price: '$80-200/hr' },
   { id: 11, name: 'Pet Care', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869147909_77640aa7.webp', price: '$20-40/hr' },
   { id: 12, name: 'Handyman', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869149702_b08bc004.webp', price: '$45-90/hr' },
-  { id: 13, name: 'Cosmetology', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869130132_82bf7c0c.webp' },
+  { id: 13, name: 'Cosmetology', icon: <a href="https://www.flaticon.com/free-icons/hair" title="hair icons"> /> },
   { id: 14, name: 'Pastry Making', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869135836_06808b2b.webp' },
   { id: 15, name: 'Catering', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869135836_06808b2b.webp' },
   { id: 16, name: 'Interior Decoration', icon: 'https://d64gsuwffb70l.cloudfront.net/69133f26a8ca10f880d5b52d_1762869146350_ee3a0c27.webp' },
