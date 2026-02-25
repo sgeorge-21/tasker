@@ -1,10 +1,16 @@
 import React, { useEffect } from "react";
+import * as LucideIcons from 'lucide-react';
 import { services } from "../data/services";
 
 type Props = {
   onFinish?: () => void;
   duration?: number; // ms
   count?: number;
+};
+
+const getIconComponent = (iconName: string) => {
+  const icon = LucideIcons[iconName as keyof typeof LucideIcons] as React.ComponentType<{ size?: number; className?: string }>;
+  return icon || LucideIcons.Wrench;
 };
 
 const SplashScreen: React.FC<Props> = ({ onFinish, duration = 2800, count = 8 }) => {
@@ -30,9 +36,12 @@ const SplashScreen: React.FC<Props> = ({ onFinish, duration = 2800, count = 8 })
           {items.map((svc, i) => {
             const angle = (360 / items.length) * i;
             const transform = `rotate(${angle}deg) translate(120px) rotate(-${angle}deg)`;
+            const IconComponent = getIconComponent(svc.icon);
             return (
               <div key={svc.id} style={{ ...styles.task, transform }} title={svc.name}>
-                <img src={svc.icon} alt={svc.name} style={styles.icon} />
+                <div style={styles.iconContainer}>
+                  <IconComponent size={24} className="text-white" />
+                </div>
                 <div style={styles.label}>{svc.name}</div>
               </div>
             );
@@ -95,11 +104,14 @@ const styles: { [k: string]: React.CSSProperties } = {
     alignItems: "center",
     gap: 6,
   },
-  icon: {
+  iconContainer: {
     width: 36,
     height: 36,
     borderRadius: 8,
-    objectFit: "cover",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "rgba(255,255,255,0.1)",
     boxShadow: "0 4px 12px rgba(2,6,23,0.6)",
   },
   label: {
