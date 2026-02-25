@@ -21,13 +21,15 @@ export const AdminDashboard: React.FC<{ onLogout: () => void }> = ({ onLogout })
   const [requests, setRequests] = useState<Request[]>([]);
   const [filter, setFilter] = useState('all');
   const [providers, setProviders] = useState<any[]>([]);
-  const [tab, setTab] = useState<'requests' | 'providers'>('requests');
+  const [tab, setTab] = useState<'requests' | 'providers' | 'quotations'>('requests');
+  const [quotations, setQuotations] = useState<any[]>([]);
   const [searchName, setSearchName] = useState('');
   const [searchServiceType, setSearchServiceType] = useState('');
 
   useEffect(() => {
     fetchRequests();
     fetchProviders();
+    fetchQuotations();
   }, []);
 
   const fetchRequests = async () => {
@@ -43,6 +45,11 @@ export const AdminDashboard: React.FC<{ onLogout: () => void }> = ({ onLogout })
   const fetchProviders = async () => {
     const { data } = await supabase.from('profiles').select('*').eq('role', 'provider').order('created_at', { ascending: false });
     if (data) setProviders(data as any[]);
+  };
+
+  const fetchQuotations = async () => {
+    const { data } = await supabase.from('quotations').select('*').order('created_at', { ascending: false });
+    if (data) setQuotations(data as any[]);
   };
 
   const filtered = filter === 'all' ? requests : requests.filter(r => r.status === filter);
@@ -65,6 +72,7 @@ export const AdminDashboard: React.FC<{ onLogout: () => void }> = ({ onLogout })
       <div className="max-w-7xl mx-auto p-4">
         <div className="flex gap-2 mb-6">
           <Button onClick={() => setTab('requests')} variant={tab === 'requests' ? 'default' : 'outline'} size="sm">Requests</Button>
+          <Button onClick={() => setTab('quotations')} variant={tab === 'quotations' ? 'default' : 'outline'} size="sm">Quotations</Button>
           <Button onClick={() => setTab('providers')} variant={tab === 'providers' ? 'default' : 'outline'} size="sm">Providers</Button>
         </div>
 
@@ -151,6 +159,34 @@ export const AdminDashboard: React.FC<{ onLogout: () => void }> = ({ onLogout })
               ))}
             </div>
           </>
+        )}
+
+        {tab === 'quotations' && (
+          <div>
+            <h3 className="font-semibold mb-4 text-gray-800">Quotation Requests</h3>
+            <div className="space-y-4">
+              {quotations.length === 0 && <div className="text-sm text-gray-500">No quotations found.</div>}
+              {quotations.map(q => (
+                <div key={q.id} className="bg-white rounded-lg shadow p-6 border">
+                  <div className="flex justify-between items-start mb-4">
+                    <div>
+                      <h3 className="font-bold text-lg text-gray-800">{q.service_name}</h3>
+                      <p className="text-sm text-gray-500">{new Date(q.created_at).toLocaleString()}</p>
+                    </div>
+                    <span className={`px-3 py-1 rounded-full text-xs font-medium ${q.status === 'pending' ? 'bg-yellow-100 text-yellow-800' : q.status === 'reviewed' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'}`}>{q.status || 'pending'}</span>
+                  </div>
+                  <div className="grid grid-cols-1 gap-2 mb-4 text-sm">
+                    <div><span className="font-medium">User ID:</span> {q.user_id}</div>
+                    {q.description && <div><span className="font-medium">Details:</span> {q.description}</div>}
+                  </div>
+                  <div className="flex gap-2">
+                    <Button size="sm" onClick={async () => { await supabase.from('quotations').update({ status: 'reviewed' }).eq('id', q.id); fetchQuotations(); }}>Mark Reviewed</Button>
+                    <Button size="sm" onClick={async () => { await supabase.from('quotations').update({ status: 'completed' }).eq('id', q.id); fetchQuotations(); }}>Mark Complete</Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         )}
 
         {tab === 'providers' && (
