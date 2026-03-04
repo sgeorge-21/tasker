@@ -6,6 +6,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import React, { useState } from "react";
 import { ThemeProvider } from "@/components/theme-provider";
+import AppLayout from "@/components/AppLayout";
+import { AppProvider } from "@/contexts/AppContext";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import SplashScreen from "./components/SplashScreen";
@@ -27,7 +29,7 @@ const App = () => {
             <BrowserRouter>
               <Routes>
                 <Route path="/" element={<Index />} />
-                <Route path="/admin" element={<AppLayout initialView="admin" />} />
+                <Route path="/admin" element={<AppProvider><AppLayout initialView="admin" /></AppProvider>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </BrowserRouter>
