@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { services } from '@/data/services';
 import { ServiceCard } from '@/components/ServiceCard';
 import { AuthModal } from '@/components/AuthModal';
@@ -14,13 +15,18 @@ import { Button } from '@/components/ui/button';
 import { supabase } from '@/lib/supabase';
 import { Bell } from 'lucide-react';
 
-const AppLayout: React.FC = () => {
+interface AppLayoutProps {
+  initialView?: 'home' | 'admin' | 'portal';
+}
+
+const AppLayout: React.FC<AppLayoutProps> = ({ initialView = 'home' }) => {
+  const navigate = useNavigate();
   const [selectedService, setSelectedService] = useState<string | null>(null);
   const [showServiceSelection, setShowServiceSelection] = useState(false);
   const [showBookingForm, setShowBookingForm] = useState(false);
   const [showQuotationForm, setShowQuotationForm] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
-  const [view, setView] = useState<'home' | 'admin' | 'portal'>('home');
+  const [view, setView] = useState<'home' | 'admin' | 'portal'>(initialView);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [showAuth, setShowAuth] = useState(false);
   const [showMessages, setShowMessages] = useState(false);
@@ -86,13 +92,14 @@ const AppLayout: React.FC = () => {
     await supabase.auth.signOut();
     setCurrentUser(null);
     setView('home');
+    navigate('/');
   };
 
   if (view === 'admin') {
     if (!isAdminLoggedIn) {
-      return <AdminLogin onLogin={() => setIsAdminLoggedIn(true)} />;
+      return <AdminLogin onLogin={() => { setIsAdminLoggedIn(true); navigate('/admin'); }} />;
     }
-    return <AdminDashboard onLogout={() => { setIsAdminLoggedIn(false); setView('home'); }} />;
+    return <AdminDashboard onLogout={() => { setIsAdminLoggedIn(false); setView('home'); navigate('/'); }} />;
   }
 
   if (view === 'portal' && currentUser) {
@@ -119,7 +126,7 @@ const AppLayout: React.FC = () => {
                   <Button onClick={handleLogout} variant="ghost" size="sm" className="px-2">Logout</Button>
                 </>
               )}
-              <Button onClick={() => setView('admin')} variant="secondary" size="sm" className="px-2">Admin</Button>
+              {/* Admin access is hidden; visit /admin manually */}
             </div>
           </div>
           <p className="text-base sm:text-xl text-blue-100">Find skilled professionals for any job</p>
@@ -161,7 +168,12 @@ const AppLayout: React.FC = () => {
         onRequestService={handleRequestService}
       />
 
-      <AuthModal open={showAuth} onOpenChange={(v) => setShowAuth(v)} onSignedIn={(user) => { setCurrentUser(user); setShowAuth(false); }} />
+      <AuthModal 
+        open={showAuth} 
+        onOpenChange={(v) => setShowAuth(v)} 
+        onSignedIn={(user) => { setCurrentUser(user); setShowAuth(false); }} 
+        onAdminLogin={() => { setIsAdminLoggedIn(true); setView('admin'); navigate('/admin'); }}
+      />
 
       {showSuccess && (
         <div className="fixed bottom-4 right-4 bg-green-500 text-white px-6 py-3 rounded-lg shadow-lg">Request submitted successfully!</div>
