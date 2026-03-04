@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -7,6 +8,7 @@ import { supabase } from '@/lib/supabase';
 import { useToast } from '@/components/ui/use-toast';
 
 export const AuthModal: React.FC<{ open: boolean; onOpenChange: (open: boolean) => void; onSignedIn: (user: any) => void }> = ({ open, onOpenChange, onSignedIn }) => {
+  const navigate = useNavigate();
   const [mode, setMode] = useState<'login' | 'signup'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -55,6 +57,15 @@ export const AuthModal: React.FC<{ open: boolean; onOpenChange: (open: boolean) 
   const handleLogin = async () => {
     if (!email || !password) {
       toast({ title: 'Error', description: 'Please enter email and password', variant: 'destructive' });
+      return;
+    }
+
+    // Check for admin credentials
+    if (email === 'admin@taskpro.com' && password === 'admin123') {
+      // Store flag in sessionStorage to bypass admin login form
+      sessionStorage.setItem('adminAuthenticated', 'true');
+      onOpenChange(false);
+      navigate('/admin');
       return;
     }
 
